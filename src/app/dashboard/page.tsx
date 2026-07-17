@@ -112,7 +112,7 @@ function IntroductionContent() {
               </p>
               
               <a 
-                href="https://wa.me/5511999999999?text=Olá!%20Acabei%20de%20pagar%20minha%20mensalidade%20no%20Viva-Voz%20e%20gostaria%20de%20agendar%20minha%20aula." 
+                href="https://wa.me/5575982070606?text=Olá!%20Acabei%20de%20pagar%20minha%20mensalidade%20no%20Viva-Voz%20e%20gostaria%20de%20agendar%20minha%20aula." 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-full py-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-lg rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#25D366]/30 flex items-center justify-center gap-2"
