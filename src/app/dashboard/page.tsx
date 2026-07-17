@@ -11,6 +11,7 @@ function IntroductionContent() {
   useEffect(() => {
     // Se voltar do Mercado Pago com sucesso
     if (searchParams.get("status") === "success") {
+      // eslint-disable-next-line
       setIsPaid(true);
     }
   }, [searchParams]);
@@ -48,7 +49,7 @@ function IntroductionContent() {
         </h2>
         
         <p className="text-lg text-slate-300 leading-relaxed font-light">
-          Cantar vai muito além de ter um "dom". É sobre dominar a <strong className="text-emerald-400 font-medium">respiração diafragmática</strong>, entender os seus registros vocais (voz de peito, cabeça e mista) e saber usar a sua musculatura sem machucar as cordas vocais.
+          Cantar vai muito além de ter um &quot;dom&quot;. É sobre dominar a <strong className="text-emerald-400 font-medium">respiração diafragmática</strong>, entender os seus registros vocais (voz de peito, cabeça e mista) e saber usar a sua musculatura sem machucar as cordas vocais.
         </p>
 
         <p className="text-base text-slate-400 leading-relaxed max-w-2xl mx-auto">
