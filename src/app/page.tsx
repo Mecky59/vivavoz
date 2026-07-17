@@ -25,33 +25,33 @@ export default function LoginPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-teal-800/20 rounded-full blur-[150px] mix-blend-screen pointer-events-none" style={{ animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
 
       {/* Main Container / Glassmorphism Card */}
-      <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row bg-slate-900/40 backdrop-blur-2xl rounded-[2.5rem] border border-slate-700/50 shadow-2xl overflow-hidden">
+      <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row bg-slate-900/60 backdrop-blur-2xl rounded-3xl md:rounded-[2.5rem] border border-slate-700/50 shadow-2xl overflow-hidden mt-4 md:mt-0">
         
         {/* Left Side: Branding / Intro */}
-        <div className="flex-1 p-10 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-700/50 bg-gradient-to-br from-slate-800/40 to-slate-900/40">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-emerald-500/30 transform -rotate-6">
+        <div className="flex-1 p-8 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-700/50 bg-gradient-to-br from-slate-800/60 to-slate-900/60 text-center md:text-left">
+          <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-6 mx-auto md:mx-0 shadow-lg shadow-emerald-500/30 transform -rotate-6">
             <Mic2 className="w-8 h-8 text-slate-950" />
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
-            A sua voz, <br />
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+            A sua voz, <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">
               seu maior palco.
             </span>
           </h1>
           
-          <p className="text-slate-400 text-lg leading-relaxed max-w-sm">
+          <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-sm mx-auto md:mx-0">
             Acesse o Viva-Voz e continue sua evolução vocal. Módulos práticos, acompanhamento profissional e resultados reais.
           </p>
 
-          <div className="mt-12 flex items-center gap-3 text-sm font-medium text-emerald-400/80 bg-emerald-500/10 w-fit px-4 py-2 rounded-full border border-emerald-500/20">
+          <div className="mt-8 md:mt-12 flex items-center justify-center md:justify-start gap-3 text-xs md:text-sm font-medium text-emerald-400/80 bg-emerald-500/10 w-full md:w-fit px-4 py-3 rounded-full border border-emerald-500/20">
             <Sparkles className="w-4 h-4" />
             Junte-se a dezenas de alunos!
           </div>
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="w-full md:w-[400px] lg:w-[480px] p-10 md:p-16 flex flex-col justify-center bg-slate-900/60">
+        <div className="w-full md:w-[400px] lg:w-[480px] p-8 md:p-16 flex flex-col justify-center bg-slate-900/60">
           <div className="text-center md:text-left mb-10">
             <h2 className="text-2xl font-bold text-white mb-2">Acesse sua conta</h2>
             <p className="text-slate-400 text-sm">Faça login com seu Google para sincronizar seu progresso.</p>
