@@ -9,8 +9,11 @@ function IntroductionContent() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Se voltar do Mercado Pago com sucesso
-    if (searchParams.get("status") === "success") {
+    // Mercado Pago pode retornar status=approved ou sobrescrever o nosso status=success
+    const status = searchParams.get("status");
+    const collectionStatus = searchParams.get("collection_status");
+    
+    if (status === "success" || status === "approved" || collectionStatus === "approved") {
       // eslint-disable-next-line
       setIsPaid(true);
     }
