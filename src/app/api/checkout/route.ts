@@ -24,11 +24,11 @@ export async function POST(request: Request) {
           },
         ],
         back_urls: {
-          success: "https://seusite.com.br/dashboard?status=success",
-          failure: "https://seusite.com.br/dashboard?status=failure",
-          pending: "https://seusite.com.br/dashboard?status=pending",
+          success: "https://vivavoz.vercel.app/dashboard?status=success",
+          failure: "https://vivavoz.vercel.app/dashboard?status=failure",
+          pending: "https://vivavoz.vercel.app/dashboard?status=pending",
         },
-        // auto_return removido pois exige HTTPS válido e domínio real
+        auto_return: "approved",
       },
     });
 
