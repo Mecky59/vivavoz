@@ -1,13 +1,36 @@
 "use client";
-import { useState } from "react";
-import { Music, DollarSign, Clock, CheckCircle2, MessageCircle } from "lucide-react";
+import { useState, useEffect, Suspense } from "react";
+import { Music, DollarSign, Clock, CheckCircle2, MessageCircle, Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
-export default function IntroductionPage() {
+function IntroductionContent() {
+  const searchParams = useSearchParams();
   const [isPaid, setIsPaid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePayment = () => {
-    // Simula a aprovação do pagamento
-    setIsPaid(true);
+  useEffect(() => {
+    // Se voltar do Mercado Pago com sucesso
+    if (searchParams.get("status") === "success") {
+      setIsPaid(true);
+    }
+  }, [searchParams]);
+
+  const handlePayment = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/checkout", { method: "POST" });
+      const data = await res.json();
+      
+      if (data.init_point) {
+        window.location.href = data.init_point; // Vai pro Mercado Pago
+      } else {
+        alert("Erro ao conectar com o Mercado Pago.");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -64,9 +87,10 @@ export default function IntroductionPage() {
               
               <button 
                 onClick={handlePayment}
-                className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-lg rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-600/20 cursor-pointer"
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-lg rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-600/20 cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
               >
-                Pagar Mensalidade
+                {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Pagar Mensalidade"}
               </button>
             </div>
           ) : (
@@ -96,7 +120,14 @@ export default function IntroductionPage() {
           )}
         </div>
       </section>
-
     </div>
+  );
+}
+
+export default function IntroductionPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-400">Carregando painel...</div>}>
+      <IntroductionContent />
+    </Suspense>
   );
 }

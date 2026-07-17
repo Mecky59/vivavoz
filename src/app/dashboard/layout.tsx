@@ -1,15 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, User, BookOpen, Home, X, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { user, signOut, loading } = useAuth();
 
-  const handleLogout = () => router.push("/");
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
+
+  if (loading) return null;
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans flex selection:bg-emerald-500/30">
@@ -36,13 +49,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </button>
           </div>
 
-          <div className="p-6 border-b border-slate-700 flex flex-col items-center">
+          <div className="p-6 border-b border-slate-700 flex flex-col items-center text-center">
             <div className="w-20 h-20 rounded-full bg-slate-700 flex items-center justify-center border-2 border-emerald-500 mb-3 overflow-hidden shadow-lg">
-               {/* Foto de perfil simulada */}
-               <User className="w-10 h-10 text-slate-400" />
+               {user?.photoURL ? (
+                 <img src={user.photoURL} alt="Foto de perfil" className="w-full h-full object-cover" />
+               ) : (
+                 <User className="w-10 h-10 text-slate-400" />
+               )}
             </div>
-            <h2 className="font-semibold text-white">Aluno</h2>
-            <p className="text-xs text-slate-400">aluno@exemplo.com</p>
+            <h2 className="font-semibold text-white">{user?.displayName || "Aluno"}</h2>
+            <p className="text-xs text-slate-400 truncate w-full">{user?.email}</p>
           </div>
 
           <nav className="flex-1 p-4 space-y-2">
