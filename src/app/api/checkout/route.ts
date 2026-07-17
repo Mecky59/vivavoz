@@ -3,6 +3,13 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 
 export async function POST(request: Request) {
   try {
+    const reqBody = await request.json();
+    const { userId } = reqBody;
+
+    if (!userId) {
+      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
+
     const accessToken = process.env.MP_ACCESS_TOKEN;
     if (!accessToken) {
       throw new Error("Missing MP_ACCESS_TOKEN in .env.local");
@@ -23,10 +30,12 @@ export async function POST(request: Request) {
             currency_id: "BRL",
           },
         ],
+        external_reference: userId,
+        notification_url: "https://vivavoz.vercel.app/api/webhooks/mercadopago",
         back_urls: {
-          success: "https://vivavoz.vercel.app/dashboard?status=success",
-          failure: "https://vivavoz.vercel.app/dashboard?status=failure",
-          pending: "https://vivavoz.vercel.app/dashboard?status=pending",
+          success: "https://vivavoz.vercel.app/dashboard",
+          failure: "https://vivavoz.vercel.app/dashboard",
+          pending: "https://vivavoz.vercel.app/dashboard",
         },
         auto_return: "approved",
       },

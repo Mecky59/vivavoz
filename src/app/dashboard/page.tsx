@@ -1,28 +1,20 @@
 "use client";
 import { useState, useEffect, Suspense } from "react";
 import { Music, DollarSign, Clock, CheckCircle2, MessageCircle, Loader2 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 function IntroductionContent() {
-  const searchParams = useSearchParams();
-  const [isPaid, setIsPaid] = useState(false);
+  const { user, hasPaid } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // Mercado Pago pode retornar status=approved ou sobrescrever o nosso status=success
-    const status = searchParams.get("status");
-    const collectionStatus = searchParams.get("collection_status");
-    
-    if (status === "success" || status === "approved" || collectionStatus === "approved") {
-      // eslint-disable-next-line
-      setIsPaid(true);
-    }
-  }, [searchParams]);
 
   const handlePayment = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/checkout", { method: "POST" });
+      const res = await fetch("/api/checkout", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user?.uid })
+      });
       const data = await res.json();
       
       if (data.init_point) {
@@ -69,7 +61,7 @@ function IntroductionContent() {
             <DollarSign className="w-64 h-64" />
           </div>
 
-          {!isPaid ? (
+          {!hasPaid ? (
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex-1 text-center mt-4">
                 <h3 className="text-2xl font-bold mb-2 text-white">
