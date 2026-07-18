@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Mic2, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -30,7 +31,16 @@ export default function LoginPage() {
         {/* Left Side: Branding / Intro */}
         <div className="flex-1 relative p-8 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-700/50 text-center md:text-left overflow-hidden">
           {/* Background Image */}
-          <div className="absolute inset-0 bg-[url('/bg-music.png')] bg-cover bg-center opacity-40 mix-blend-luminosity"></div>
+          <div className="absolute inset-0 opacity-40 mix-blend-luminosity">
+            <Image
+              src="/bg-music.png"
+              alt="Fundo Musical"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
           {/* Gradient Overlay for Readability */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-emerald-900/40"></div>
           
