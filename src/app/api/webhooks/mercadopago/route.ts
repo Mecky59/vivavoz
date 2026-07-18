@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Payment } from "mercadopago";
-import { supabase } from "@/lib/supabase/client";
+import { supabaseServer as supabase } from "@/lib/supabase/server";
+
 export async function POST(request: Request) {
   try {
     // Mercado Pago pode enviar os dados na URL ou no Corpo (Body)
