@@ -47,9 +47,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               createdAt: new Date()
             });
           }
+        } catch (error) {
+          console.error("Erro no Firestore (ignorado para checar pagamento):", error);
+        }
 
-          // Função para buscar o status de pagamento no Supabase
-          const checkPaymentStatus = async () => {
+        // Função para buscar o status de pagamento no Supabase
+        const checkPaymentStatus = async () => {
+          try {
             const { data, error } = await supabase
               .from('user_payments')
               .select('has_paid')
@@ -62,18 +66,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
               setHasPaid(false);
             }
-          };
+          } catch (err) {
+            console.error("Erro ao checar Supabase:", err);
+          }
+        };
 
-          await checkPaymentStatus();
+        await checkPaymentStatus();
 
-          // Se não pagou, configura o polling para verificar a cada 3 segundos
-          if (pollingInterval) clearInterval(pollingInterval);
-          pollingInterval = setInterval(checkPaymentStatus, 3000);
-
-        } catch (error) {
-          console.error("Erro ao buscar dados do usuário", error);
-          setHasPaid(false);
-        }
+        // Se não pagou, configura o polling para verificar a cada 3 segundos
+        if (pollingInterval) clearInterval(pollingInterval);
+        pollingInterval = setInterval(checkPaymentStatus, 3000);
       } else {
         setHasPaid(false);
         if (pollingInterval) clearInterval(pollingInterval);

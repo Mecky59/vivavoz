@@ -19,6 +19,8 @@ export async function POST(request: Request) {
     const client = new MercadoPagoConfig({ accessToken, options: { timeout: 10000 } });
     const preference = new Preference(client);
 
+    const origin = request.headers.get("origin") || "https://vivavoz.vercel.app";
+
     const body = await preference.create({
       body: {
         items: [
@@ -31,11 +33,11 @@ export async function POST(request: Request) {
           },
         ],
         external_reference: userId,
-        notification_url: "https://vivavoz.vercel.app/api/webhooks/mercadopago",
+        notification_url: `${origin}/api/webhooks/mercadopago`,
         back_urls: {
-          success: "https://vivavoz.vercel.app/dashboard",
-          failure: "https://vivavoz.vercel.app/dashboard",
-          pending: "https://vivavoz.vercel.app/dashboard",
+          success: `${origin}/dashboard`,
+          failure: `${origin}/dashboard`,
+          pending: `${origin}/dashboard`,
         },
         auto_return: "approved",
       },
