@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, onAuthStateChanged, signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, googleProvider, db } from "@/lib/firebase/config";
+import { supabase } from "@/lib/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +29,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [hasPaid, setHasPaid] = useState(false);
 
   useEffect(() => {
+    let pollingInterval: NodeJS.Timeout;
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
@@ -35,28 +38,53 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const userRef = doc(db, "users", currentUser.uid);
           const userSnap = await getDoc(userRef);
           
-          if (userSnap.exists()) {
-            setHasPaid(userSnap.data().hasPaid || false);
-          } else {
-            // Primeiro acesso: cria o perfil do usuário no banco
+          if (!userSnap.exists()) {
+            // Primeiro acesso: cria o perfil do usuário no banco Firestore
             await setDoc(userRef, {
               email: currentUser.email,
               name: currentUser.displayName,
               hasPaid: false,
               createdAt: new Date()
             });
-            setHasPaid(false);
           }
+
+          // Função para buscar o status de pagamento no Supabase
+          const checkPaymentStatus = async () => {
+            const { data, error } = await supabase
+              .from('user_payments')
+              .select('has_paid')
+              .eq('user_id', currentUser.uid)
+              .single();
+            
+            if (data?.has_paid) {
+              setHasPaid(true);
+              if (pollingInterval) clearInterval(pollingInterval);
+            } else {
+              setHasPaid(false);
+            }
+          };
+
+          await checkPaymentStatus();
+
+          // Se não pagou, configura o polling para verificar a cada 3 segundos
+          if (pollingInterval) clearInterval(pollingInterval);
+          pollingInterval = setInterval(checkPaymentStatus, 3000);
+
         } catch (error) {
-          console.error("Erro ao buscar dados do usuário no Firestore", error);
+          console.error("Erro ao buscar dados do usuário", error);
           setHasPaid(false);
         }
       } else {
         setHasPaid(false);
+        if (pollingInterval) clearInterval(pollingInterval);
       }
       setLoading(false);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribe();
+      if (pollingInterval) clearInterval(pollingInterval);
+    };
   }, []);
 
   const signInWithGoogle = async () => {

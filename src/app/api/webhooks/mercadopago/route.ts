@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Payment } from "mercadopago";
-import { adminDb } from "@/lib/firebase/admin";
-
+import { supabase } from "@/lib/supabase/client";
 export async function POST(request: Request) {
   try {
     // Mercado Pago pode enviar os dados na URL ou no Corpo (Body)
@@ -38,12 +37,20 @@ export async function POST(request: Request) {
       const userId = paymentData.external_reference; // É o ID do usuário que enviamos lá no checkout!
       
       if (userId) {
-        // 3. Atualizamos o banco de dados (Firestore) liberando o acesso do aluno
-        await adminDb.collection("users").doc(userId).set({
-          hasPaid: true,
-          paymentId: paymentData.id,
-          updatedAt: new Date()
-        }, { merge: true });
+        // 3. Atualizamos o banco de dados (Supabase) liberando o acesso do aluno
+        const { error: supabaseError } = await supabase
+          .from("user_payments")
+          .upsert({
+            user_id: userId,
+            has_paid: true,
+            payment_id: String(paymentData.id),
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'user_id' });
+
+        if (supabaseError) {
+          console.error("Erro ao salvar no Supabase:", supabaseError);
+          throw new Error("Falha ao atualizar pagamento no Supabase");
+        }
       }
     }
 

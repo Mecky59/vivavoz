@@ -1,8 +1,8 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
-if (!getApps().length) {
-  try {
+export function getAdminDb() {
+  if (!getApps().length) {
     const serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
     
     if (!serviceAccountStr) {
@@ -15,11 +15,7 @@ if (!getApps().length) {
     initializeApp({
       credential: cert(serviceAccount)
     });
-  } catch (error) {
-    console.error("Firebase admin initialization error", error);
   }
+  
+  return getFirestore();
 }
-
-const adminDb = getFirestore();
-
-export { adminDb };
