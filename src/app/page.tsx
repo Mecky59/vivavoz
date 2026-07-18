@@ -1,22 +1,8 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Mic2, Sparkles } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { LoginButton } from "@/components/LoginButton";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { signInWithGoogle } = useAuth();
-
-  const handleLogin = async () => {
-    try {
-      await signInWithGoogle();
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Erro no login", error);
-    }
-  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden bg-slate-950 selection:bg-emerald-500/30">
@@ -73,17 +59,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-6">
-            <button 
-              onClick={handleLogin}
-              className="group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-white hover:bg-slate-50 text-slate-900 font-semibold text-lg rounded-2xl transition-all duration-300 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:-translate-y-1 cursor-pointer"
-            >
-              <img 
-                src="https://www.google.com/favicon.ico" 
-                alt="Google" 
-                className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" 
-              />
-              Entrar com o Google
-            </button>
+            <LoginButton />
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

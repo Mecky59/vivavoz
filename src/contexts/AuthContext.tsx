@@ -33,6 +33,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // Libera a tela IMEDIATAMENTE após o Google Auth
+      
       if (currentUser) {
         try {
           const userRef = doc(db, "users", currentUser.uid);
@@ -80,7 +82,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setHasPaid(false);
         if (pollingInterval) clearInterval(pollingInterval);
       }
-      setLoading(false);
     });
 
     return () => {
